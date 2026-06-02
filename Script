@@ -1,4 +1,6 @@
 local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+
 local player = Players.LocalPlayer
 
 -- ScreenGui
@@ -7,57 +9,132 @@ gui.Name = "InfoUI"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- Khung chính
+-- Frame chính
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 220, 0, 80) -- nhỏ gọn
-frame.Position = UDim2.new(0.5, -110, 0, 5) -- sát phía trên màn hình
+frame.Size = UDim2.new(0, 250, 0, 100)
+frame.Position = UDim2.new(0.5, -125, 0, 5)
 frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
 frame.BorderSizePixel = 2
+frame.BorderColor3 = Color3.fromRGB(255,255,255)
+frame.Active = true
 frame.Parent = gui
 
 -- Tên
 local nameLabel = Instance.new("TextLabel")
-nameLabel.Size = UDim2.new(1, -10, 0, 25)
-nameLabel.Position = UDim2.new(0, 5, 0, 0)
+nameLabel.Size = UDim2.new(1,-35,0,25)
+nameLabel.Position = UDim2.new(0,5,0,0)
 nameLabel.BackgroundTransparency = 1
-nameLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
-nameLabel.TextScaled = true
+nameLabel.TextColor3 = Color3.fromRGB(255,215,0)
 nameLabel.Font = Enum.Font.GothamBold
+nameLabel.TextScaled = true
 nameLabel.TextXAlignment = Enum.TextXAlignment.Left
 nameLabel.Text = "Tên: dhai*****"
 nameLabel.Parent = frame
 
+-- Nút thu gọn
+local minimize = Instance.new("TextButton")
+minimize.Size = UDim2.new(0,25,0,25)
+minimize.Position = UDim2.new(1,-28,0,2)
+minimize.Text = "-"
+minimize.Font = Enum.Font.GothamBold
+minimize.TextScaled = true
+minimize.Parent = frame
+
 -- Đơn
 local unitLabel = Instance.new("TextLabel")
-unitLabel.Size = UDim2.new(1, -10, 0, 25)
-unitLabel.Position = UDim2.new(0, 5, 0, 25)
+unitLabel.Size = UDim2.new(1,-10,0,25)
+unitLabel.Position = UDim2.new(0,5,0,25)
 unitLabel.BackgroundTransparency = 1
-unitLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-unitLabel.TextScaled = true
+unitLabel.TextColor3 = Color3.fromRGB(255,255,255)
 unitLabel.Font = Enum.Font.GothamBold
+unitLabel.TextScaled = true
 unitLabel.TextXAlignment = Enum.TextXAlignment.Left
 unitLabel.Text = "Đơn: 1-2650"
 unitLabel.Parent = frame
 
--- Ghi chú
-local noteLabel = Instance.new("TextLabel")
-noteLabel.Size = UDim2.new(1, -10, 0, 25)
-noteLabel.Position = UDim2.new(0, 5, 0, 50)
-noteLabel.BackgroundTransparency = 1
-noteLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
-noteLabel.TextScaled = true
-noteLabel.Font = Enum.Font.GothamBold
-noteLabel.TextXAlignment = Enum.TextXAlignment.Left
-noteLabel.Text = "Ghi chú: không có ghi chú"
-noteLabel.Parent = frame
+-- Ô ghi chú
+local noteBox = Instance.new("TextBox")
+noteBox.Size = UDim2.new(1,-10,0,35)
+noteBox.Position = UDim2.new(0,5,0,58)
+noteBox.BackgroundColor3 = Color3.fromRGB(25,25,25)
+noteBox.TextColor3 = Color3.fromRGB(0,255,255)
+noteBox.Font = Enum.Font.GothamBold
+noteBox.TextScaled = true
+noteBox.ClearTextOnFocus = false
+noteBox.PlaceholderText = "Nhập ghi chú..."
+noteBox.Text = "không có ghi chú"
+noteBox.Parent = frame
 
--- Hàm đổi nội dung
-local function UpdateInfo(name, unit, note)
-	nameLabel.Text = "Tên: " .. tostring(name)
-	unitLabel.Text = "Đơn: " .. tostring(unit)
-	noteLabel.Text = "Ghi chú: " .. tostring(note)
+--------------------------------------------------
+-- Kéo thả UI
+--------------------------------------------------
+
+local dragging = false
+local dragStart
+local startPos
+
+frame.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1
+	or input.UserInputType == Enum.UserInputType.Touch then
+
+		dragging = true
+		dragStart = input.Position
+		startPos = frame.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+UIS.InputChanged:Connect(function(input)
+	if dragging and (
+		input.UserInputType == Enum.UserInputType.MouseMovement
+		or input.UserInputType == Enum.UserInputType.Touch
+	) then
+
+		local delta = input.Position - dragStart
+
+		frame.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
+
+--------------------------------------------------
+-- Thu gọn
+--------------------------------------------------
+
+local minimized = false
+
+minimize.MouseButton1Click:Connect(function()
+	minimized = not minimized
+
+	if minimized then
+		unitLabel.Visible = false
+		noteBox.Visible = false
+		frame.Size = UDim2.new(0,250,0,30)
+		minimize.Text = "+"
+	else
+		unitLabel.Visible = true
+		noteBox.Visible = true
+		frame.Size = UDim2.new(0,250,0,100)
+		minimize.Text = "-"
+	end
+end)
+
+--------------------------------------------------
+-- Hàm cập nhật
+--------------------------------------------------
+
+local function UpdateInfo(name, unit)
+	nameLabel.Text = "Tên: "..name
+	unitLabel.Text = "Đơn: "..unit
 end
 
--- Ví dụ sử dụng
-UpdateInfo("dhai*****", "1-2650", "không có ghi chú")
+UpdateInfo("dhai*****", "1-2650")
