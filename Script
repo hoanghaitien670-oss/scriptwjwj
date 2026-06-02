@@ -1,60 +1,63 @@
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
 
-local Main = Instance.new("Frame")
-Main.Parent = ScreenGui
-Main.Size = UDim2.new(0, 500, 0, 150)
-Main.Position = UDim2.new(0.5, -250, 0.15, 0)
-Main.BackgroundColor3 = Color3.fromRGB(0,0,0)
-Main.BorderColor3 = Color3.fromRGB(255,255,255)
-Main.BorderSizePixel = 3
+-- ScreenGui
+local gui = Instance.new("ScreenGui")
+gui.Name = "InfoUI"
+gui.ResetOnSpawn = false
+gui.Parent = player:WaitForChild("PlayerGui")
 
-local NameLabel = Instance.new("TextLabel")
-NameLabel.Parent = Main
-NameLabel.BackgroundTransparency = 1
-NameLabel.Position = UDim2.new(0,15,0,10)
-NameLabel.Size = UDim2.new(1,-20,0,40)
-NameLabel.Font = Enum.Font.GothamBold
-NameLabel.TextSize = 32
-NameLabel.TextXAlignment = Enum.TextXAlignment.Left
-NameLabel.TextColor3 = Color3.fromRGB(255,215,0)
-NameLabel.Text = "Tên: dhai*****"
+-- Khung chính
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 220, 0, 80) -- nhỏ gọn
+frame.Position = UDim2.new(0.5, -110, 0, 5) -- sát phía trên màn hình
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BorderColor3 = Color3.fromRGB(255, 255, 255)
+frame.BorderSizePixel = 2
+frame.Parent = gui
 
-local OrderLabel = Instance.new("TextLabel")
-OrderLabel.Parent = Main
-OrderLabel.BackgroundTransparency = 1
-OrderLabel.Position = UDim2.new(0,15,0,50)
-OrderLabel.Size = UDim2.new(1,-20,0,35)
-OrderLabel.Font = Enum.Font.GothamBold
-OrderLabel.TextSize = 30
-OrderLabel.TextXAlignment = Enum.TextXAlignment.Left
-OrderLabel.TextColor3 = Color3.fromRGB(255,255,255)
-OrderLabel.Text = "Đơn: 1-2650"
+-- Tên
+local nameLabel = Instance.new("TextLabel")
+nameLabel.Size = UDim2.new(1, -10, 0, 25)
+nameLabel.Position = UDim2.new(0, 5, 0, 0)
+nameLabel.BackgroundTransparency = 1
+nameLabel.TextColor3 = Color3.fromRGB(255, 215, 0)
+nameLabel.TextScaled = true
+nameLabel.Font = Enum.Font.GothamBold
+nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+nameLabel.Text = "Tên: dhai*****"
+nameLabel.Parent = frame
 
-local NoteLabel = Instance.new("TextLabel")
-NoteLabel.Parent = Main
-NoteLabel.BackgroundTransparency = 1
-NoteLabel.Position = UDim2.new(0,15,0,90)
-NoteLabel.Size = UDim2.new(1,-20,0,40)
-NoteLabel.Font = Enum.Font.GothamBold
-NoteLabel.TextSize = 28
-NoteLabel.TextXAlignment = Enum.TextXAlignment.Left
-NoteLabel.TextColor3 = Color3.fromRGB(0,255,255)
-NoteLabel.Text = "Ghi chú: không có ghi chú"NotesBox.Position = UDim2.new(0, 10, 0, 130)
-NotesBox.BackgroundColor3 = Color3.fromRGB(45,45,45)
-NotesBox.TextColor3 = Color3.new(1,1,1)
-NotesBox.TextXAlignment = Enum.TextXAlignment.Left
-NotesBox.TextYAlignment = Enum.TextYAlignment.Top
-NotesBox.TextWrapped = false
-NotesBox.TextScaled = false
-NotesBox.Text = ""
+-- Đơn
+local unitLabel = Instance.new("TextLabel")
+unitLabel.Size = UDim2.new(1, -10, 0, 25)
+unitLabel.Position = UDim2.new(0, 5, 0, 25)
+unitLabel.BackgroundTransparency = 1
+unitLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+unitLabel.TextScaled = true
+unitLabel.Font = Enum.Font.GothamBold
+unitLabel.TextXAlignment = Enum.TextXAlignment.Left
+unitLabel.Text = "Đơn: 1-2650"
+unitLabel.Parent = frame
 
-local Notes = {}
+-- Ghi chú
+local noteLabel = Instance.new("TextLabel")
+noteLabel.Size = UDim2.new(1, -10, 0, 25)
+noteLabel.Position = UDim2.new(0, 5, 0, 50)
+noteLabel.BackgroundTransparency = 1
+noteLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
+noteLabel.TextScaled = true
+noteLabel.Font = Enum.Font.GothamBold
+noteLabel.TextXAlignment = Enum.TextXAlignment.Left
+noteLabel.Text = "Ghi chú: không có ghi chú"
+noteLabel.Parent = frame
 
-AddButton.MouseButton1Click:Connect(function()
-    if InputBox.Text ~= "" then
-        table.insert(Notes, InputBox.Text)
-        NotesBox.Text = table.concat(Notes, "\n")
-        InputBox.Text = ""
-    end
-end)
+-- Hàm đổi nội dung
+local function UpdateInfo(name, unit, note)
+	nameLabel.Text = "Tên: " .. tostring(name)
+	unitLabel.Text = "Đơn: " .. tostring(unit)
+	noteLabel.Text = "Ghi chú: " .. tostring(note)
+end
+
+-- Ví dụ sử dụng
+UpdateInfo("dhai*****", "1-2650", "không có ghi chú")
