@@ -1,0 +1,54 @@
+-- Order Note UI
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local InputBox = Instance.new("TextBox")
+local AddButton = Instance.new("TextButton")
+local NotesBox = Instance.new("TextLabel")
+
+ScreenGui.Parent = game:GetService("CoreGui")
+
+Frame.Parent = ScreenGui
+Frame.Size = UDim2.new(0, 350, 0, 250)
+Frame.Position = UDim2.new(0.5, -175, 0.5, -125)
+Frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+
+Title.Parent = Frame
+Title.Size = UDim2.new(1, 0, 0, 30)
+Title.Text = "📋 Ghi Chú Đơn Cày Thuê"
+Title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Title.TextColor3 = Color3.new(1,1,1)
+
+InputBox.Parent = Frame
+InputBox.Size = UDim2.new(1, -20, 0, 35)
+InputBox.Position = UDim2.new(0, 10, 0, 40)
+InputBox.PlaceholderText = "Nhập đơn..."
+InputBox.Text = ""
+
+AddButton.Parent = Frame
+AddButton.Size = UDim2.new(1, -20, 0, 35)
+AddButton.Position = UDim2.new(0, 10, 0, 85)
+AddButton.Text = "➕ Thêm Đơn"
+AddButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+AddButton.TextColor3 = Color3.new(1,1,1)
+
+NotesBox.Parent = Frame
+NotesBox.Size = UDim2.new(1, -20, 1, -130)
+NotesBox.Position = UDim2.new(0, 10, 0, 130)
+NotesBox.BackgroundColor3 = Color3.fromRGB(45,45,45)
+NotesBox.TextColor3 = Color3.new(1,1,1)
+NotesBox.TextXAlignment = Enum.TextXAlignment.Left
+NotesBox.TextYAlignment = Enum.TextYAlignment.Top
+NotesBox.TextWrapped = false
+NotesBox.TextScaled = false
+NotesBox.Text = ""
+
+local Notes = {}
+
+AddButton.MouseButton1Click:Connect(function()
+    if InputBox.Text ~= "" then
+        table.insert(Notes, InputBox.Text)
+        NotesBox.Text = table.concat(Notes, "\n")
+        InputBox.Text = ""
+    end
+end)
