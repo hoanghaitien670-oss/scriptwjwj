@@ -1,134 +1,135 @@
 local Players = game:GetService("Players")
-local UIS = game:GetService("UserInputService")
+local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
-
--- ScreenGui
 local gui = Instance.new("ScreenGui")
-gui.Name = "InfoUI"
+gui.Name = "InfoPanel"
 gui.ResetOnSpawn = false
 gui.Parent = player:WaitForChild("PlayerGui")
 
--- Frame chính
+--------------------------------------------------
+-- MAIN FRAME
+--------------------------------------------------
+
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 280, 0, 130)
-frame.Position = UDim2.new(0.5, -140, 0, 5)
-frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.Size = UDim2.new(0, 260, 0, 170)
+frame.Position = UDim2.new(0.5, -130, 0, 10)
+frame.BackgroundColor3 = Color3.fromRGB(35,35,35)
 frame.Parent = gui
-frame.Active = true
 
--- Bo góc frame
-local frameCorner = Instance.new("UICorner")
-frameCorner.CornerRadius = UDim.new(0, 10)
-frameCorner.Parent = frame
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0,12)
+corner.Parent = frame
 
--- Viền
 local stroke = Instance.new("UIStroke")
 stroke.Color = Color3.fromRGB(255,255,255)
 stroke.Thickness = 1.5
+stroke.Transparency = 0.2
 stroke.Parent = frame
 
--- Tên
-local nameBox = Instance.new("TextBox")
-nameBox.Size = UDim2.new(1,-40,0,25)
-nameBox.Position = UDim2.new(0,5,0,5)
-nameBox.BackgroundColor3 = Color3.fromRGB(20,20,20)
-nameBox.TextColor3 = Color3.fromRGB(255,215,0)
-nameBox.Font = Enum.Font.GothamBold
-nameBox.TextScaled = true
-nameBox.TextXAlignment = Enum.TextXAlignment.Left
-nameBox.ClearTextOnFocus = false
-nameBox.Text = "Tên: dhai*****"
-nameBox.Parent = frame
+--------------------------------------------------
+-- TITLE BAR
+--------------------------------------------------
 
--- Đơn
-local unitBox = Instance.new("TextBox")
-unitBox.Size = UDim2.new(1,-10,0,25)
-unitBox.Position = UDim2.new(0,5,0,35)
-unitBox.BackgroundColor3 = Color3.fromRGB(20,20,20)
-unitBox.TextColor3 = Color3.fromRGB(255,255,255)
-unitBox.Font = Enum.Font.GothamBold
-unitBox.TextScaled = true
-unitBox.TextXAlignment = Enum.TextXAlignment.Left
-unitBox.ClearTextOnFocus = false
-unitBox.Text = "Đơn: 1-2650"
-unitBox.Parent = frame
+local titleBar = Instance.new("Frame")
+titleBar.Size = UDim2.new(1,0,0,30)
+titleBar.BackgroundTransparency = 1
+titleBar.Parent = frame
 
--- Ghi chú
-local noteBox = Instance.new("TextBox")
-noteBox.Size = UDim2.new(1,-10,0,45)
-noteBox.Position = UDim2.new(0,5,0,65)
-noteBox.BackgroundColor3 = Color3.fromRGB(20,20,20)
-noteBox.TextColor3 = Color3.fromRGB(0,255,255)
-noteBox.Font = Enum.Font.GothamBold
-noteBox.TextScaled = true
-noteBox.ClearTextOnFocus = false
-noteBox.TextWrapped = true
-noteBox.PlaceholderText = "Nhập ghi chú..."
-noteBox.Text = "không có ghi chú"
-noteBox.Parent = frame
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1,-40,1,0)
+title.Position = UDim2.new(0,10,0,0)
+title.Text = "Thông Tin"
+title.TextColor3 = Color3.new(1,1,1)
+title.Font = Enum.Font.GothamBold
+title.TextSize = 16
+title.BackgroundTransparency = 1
+title.TextXAlignment = Enum.TextXAlignment.Left
+title.Parent = titleBar
 
--- Nút thu gọn
+--------------------------------------------------
+-- MINIMIZE BUTTON
+--------------------------------------------------
+
 local minimize = Instance.new("TextButton")
 minimize.Size = UDim2.new(0,25,0,25)
-minimize.Position = UDim2.new(1,-30,0,5)
+minimize.Position = UDim2.new(1,-30,0,2)
 minimize.Text = "-"
 minimize.Font = Enum.Font.GothamBold
-minimize.TextScaled = true
-minimize.BackgroundColor3 = Color3.fromRGB(35,35,35)
-minimize.TextColor3 = Color3.fromRGB(255,255,255)
-minimize.Parent = frame
+minimize.TextSize = 18
+minimize.TextColor3 = Color3.new(1,1,1)
+minimize.BackgroundColor3 = Color3.fromRGB(60,60,60)
+minimize.Parent = titleBar
 
--- Bo góc các ô
-for _,obj in pairs({nameBox, unitBox, noteBox, minimize}) do
-	local corner = Instance.new("UICorner")
-	corner.CornerRadius = UDim.new(0,8)
-	corner.Parent = obj
+local miniCorner = Instance.new("UICorner")
+miniCorner.CornerRadius = UDim.new(0,8)
+miniCorner.Parent = minimize
+
+--------------------------------------------------
+-- CONTENT
+--------------------------------------------------
+
+local content = Instance.new("Frame")
+content.Size = UDim2.new(1,-10,1,-40)
+content.Position = UDim2.new(0,5,0,35)
+content.BackgroundTransparency = 1
+content.Parent = frame
+
+local layout = Instance.new("UIListLayout")
+layout.Padding = UDim.new(0,5)
+layout.Parent = content
+
+local function createBox(place)
+	local box = Instance.new("TextBox")
+	box.Size = UDim2.new(1,0,0,35)
+	box.BackgroundColor3 = Color3.fromRGB(50,50,50)
+	box.TextColor3 = Color3.new(1,1,1)
+	box.PlaceholderText = place
+	box.ClearTextOnFocus = false
+	box.Font = Enum.Font.Gotham
+	box.TextSize = 14
+	box.Parent = content
+
+	local c = Instance.new("UICorner")
+	c.CornerRadius = UDim.new(0,8)
+	c.Parent = box
+
+	local s = Instance.new("UIStroke")
+	s.Color = Color3.fromRGB(255,255,255)
+	s.Thickness = 1
+	s.Transparency = 0.4
+	s.Parent = box
+
+	return box
 end
 
---------------------------------------------------
--- Giữ tiền tố
---------------------------------------------------
-
-nameBox.FocusLost:Connect(function()
-	local text = nameBox.Text:gsub("Tên:%s*", "")
-	nameBox.Text = "Tên: "..text
-end)
-
-unitBox.FocusLost:Connect(function()
-	local text = unitBox.Text:gsub("Đơn:%s*", "")
-	unitBox.Text = "Đơn: "..text
-end)
+local nameBox = createBox("Tên")
+local orderBox = createBox("Đơn")
+local noteBox = createBox("Ghi chú")
 
 --------------------------------------------------
--- Thu gọn / Mở rộng
+-- MINIMIZE / EXPAND
 --------------------------------------------------
 
-local minimized = false
+local expanded = true
+local fullSize = frame.Size
 
 minimize.MouseButton1Click:Connect(function()
+	expanded = not expanded
 
-	minimized = not minimized
-
-	if minimized then
-		unitBox.Visible = false
-		noteBox.Visible = false
-
-		frame.Size = UDim2.new(0,280,0,35)
-		minimize.Text = "+"
-
-	else
-		unitBox.Visible = true
-		noteBox.Visible = true
-
-		frame.Size = UDim2.new(0,280,0,130)
+	if expanded then
+		content.Visible = true
+		frame.Size = fullSize
 		minimize.Text = "-"
+	else
+		content.Visible = false
+		frame.Size = UDim2.new(0,260,0,35)
+		minimize.Text = "+"
 	end
-
 end)
 
 --------------------------------------------------
--- Kéo thả UI
+-- DRAG SYSTEM (MOUSE + TOUCH)
 --------------------------------------------------
 
 local dragging = false
@@ -136,8 +137,17 @@ local dragInput
 local dragStart
 local startPos
 
-frame.InputBegan:Connect(function(input)
+local function update(input)
+	local delta = input.Position - dragStart
+	frame.Position = UDim2.new(
+		startPos.X.Scale,
+		startPos.X.Offset + delta.X,
+		startPos.Y.Scale,
+		startPos.Y.Offset + delta.Y
+	)
+end
 
+titleBar.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseButton1
 	or input.UserInputType == Enum.UserInputType.Touch then
 
@@ -150,35 +160,18 @@ frame.InputBegan:Connect(function(input)
 				dragging = false
 			end
 		end)
-
 	end
-
 end)
 
-frame.InputChanged:Connect(function(input)
-
+titleBar.InputChanged:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.MouseMovement
 	or input.UserInputType == Enum.UserInputType.Touch then
-
 		dragInput = input
-
 	end
-
 end)
 
-UIS.InputChanged:Connect(function(input)
-
+UserInputService.InputChanged:Connect(function(input)
 	if input == dragInput and dragging then
-
-		local delta = input.Position - dragStart
-
-		frame.Position = UDim2.new(
-			startPos.X.Scale,
-			startPos.X.Offset + delta.X,
-			startPos.Y.Scale,
-			startPos.Y.Offset + delta.Y
-		)
-
+		update(input)
 	end
-
 end)
